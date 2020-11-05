@@ -20,3 +20,21 @@ class AuthorBooks(Document):
     book = ReferenceField(Book)
     meta = {'db_alias': 'users-books-db-alias'}
  ```
+ 
+ ### referencing
+ 
+ ```
+ class User(Document):
+    name = StringField()
+
+class Page(Document):
+    content = StringField()
+    author = ReferenceField(User)
+
+john = User(name="John Smith")
+john.save()
+
+post = Page(content="Test Page")
+post.author = john
+post.save()
+```
