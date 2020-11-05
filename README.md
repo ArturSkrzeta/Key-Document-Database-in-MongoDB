@@ -1,6 +1,6 @@
 # Key-Document Database in MongoDB
 
-## 3 different databases
+### 3 different databases
 
 ```
 connect(alias='user-db-alias', db='user-db')
