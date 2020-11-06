@@ -1,7 +1,6 @@
 # Key-Document Database in MongoDB
 
 ### 3 different databases
-
 ```
 connect(alias='user-db-alias', db='user-db')
 connect(alias='book-db-alias', db='book-db')
@@ -22,7 +21,6 @@ class AuthorBooks(Document):
  ```
  
  ### referencing
- 
  ```
  class User(Document):
     name = StringField()
@@ -37,4 +35,18 @@ john.save()
 post = Page(content="Test Page")
 post.author = john
 post.save()
+```
+
+### embedded documents
+embeddeddocument is embeddeddocument - not a regular one - it inherits from EmbeddedDocument and doesn't have save method - it only exists in parent document
+```
+class Comment(EmbeddedDocument):
+    content = StringField()
+    
+class Page(Document):
+    comments = ListField(EmbeddedDocumentField(Comment))
+
+comment1 = Comment(content='Good work!')
+comment2 = Comment(content='Nice article!')
+page = Page(comments=[comment1, comment2])
 ```
