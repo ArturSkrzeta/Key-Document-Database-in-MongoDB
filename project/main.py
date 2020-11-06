@@ -10,21 +10,10 @@ DB_STRING = f'mongodb+srv://{USER}:{PASSWORD}@{CLUSTER}.4ybna.mongodb.net/{DATAB
 class Clients(me.EmbeddedDocument):
     name = me.StringField()
 
-    meta = {
-        'db_alias': 'db',
-        'collection': 'clients'
-    }
-
-    def to_json(self):
-        return {
-            'name': self.name,
-        }
-
-
 class Products(me.Document):
     name = me.StringField()
     price = me.FloatField()
-    clients = me.EmbeddedDocumentListField(Clients) # to check if it's embedded automatically
+    clients = me.ListField(me.EmbeddedDocumentField(Clients)) # to check if it's embedded automatically
 
     meta = {
         'db_alias': 'db',
@@ -45,9 +34,12 @@ def terminate_db():
     me.disconnect(alias=ALIAS)
 
 def create_document(class_name, **kwargs):
-    entity = class_name(**kwargs)
-    entity.save()
-    return entity
+    object = class_name(**kwargs)
+    try:
+        object.save()
+    except:
+        pass
+    return object
 
 def count_documents(class_name):
     print(class_name.objects().count())
@@ -57,10 +49,10 @@ def main():
 
     connect_to_db()
 
-    create_document(Clients, name="Important Company")
-    create_document(Products, name="Phone", price="1999.99")
+    client1 = create_document(Clients, name="Important Company")
+    client2 = create_document(Clients, name="Small Company")
+    product1 = create_document(Products, name="TV", price="6999.99", clients=[client1,client2])
 
-    count_documents(Clients)
     count_documents(Products)
 
     terminate_db()
